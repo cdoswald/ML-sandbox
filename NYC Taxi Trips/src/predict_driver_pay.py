@@ -4,9 +4,9 @@ Author:         Chris Oswald
 Date Created:   16 July 2023
 Project:        NYC Taxi Trips
 Purpose:        Predict driver pay based on pickup location and pickup datetime.
-                These are the two main factors that drivers have control over 
+                These are the two main factors that drivers have control over
                 before a new trip request comes in. That is, drivers can decide
-                what days/hours to drive and (in some cases) where to idle to 
+                what days/hours to drive and (in some cases) where to idle to
                 try to maximize per-trip pay
 """
 # Import packages
