@@ -1,0 +1,16 @@
+{
+	"dirs":{
+		"raw_data": "../data/raw",
+		"intermediate_data": "../data/intermediate",
+		"output": "../data/output"
+	},
+	
+	"files":{
+		"raw_data_suffix": ".parquet"
+		
+	},
+	
+	"params":{
+		
+	}
+}
