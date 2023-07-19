@@ -1,10 +1,10 @@
 {
     "driver_pay":{
-        "min":1,
+        "min":2,
         "max":150
     },
 	"trip_time":{
-		"min":1,
+		"min":120,
 		"max":7200
 	}
 }

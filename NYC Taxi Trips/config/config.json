@@ -2,12 +2,13 @@
 	"dirs":{
 		"raw_data": "../data/raw",
 		"intermediate_data": "../data/intermediate",
-		"output": "../data/output"
+		"output": "../data/output",
+		"plots": "../data/output/plots"
 	},
 	
 	"files":{
-		"raw_data_suffix": ".parquet"
-		
+		"raw_data_suffix": ".parquet",
+		"processed_data": "processed_data.parquet"
 	},
 	
 	"params":{
