@@ -31,7 +31,7 @@ sns.set_theme(style='darkgrid')
 
 from pyarrow.parquet import read_schema
 
-from data_processing_functions import truncate_numerical_vars
+from process_data_functions import truncate_numerical_vars
 
 # Define constants
 SECONDS_PER_HOUR = 3600
