@@ -1,5 +1,7 @@
-# Kaggle datasets
-Kaggle/Competitions/*/Data/
+# Data files
+Kaggle/Competitions/*/data/
+NYC Taxi Trips/data/*
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
