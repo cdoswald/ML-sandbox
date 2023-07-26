@@ -48,10 +48,10 @@ if __name__ == '__main__':
         os.makedirs(directory, exist_ok=True)
 
     # Import data
-    raw_data_files = [
+    raw_data_files = sorted([
         file for file in os.listdir(dirs['raw_data'])
         if file.endswith(files['raw_data_suffix'])
-    ]
+    ])
     input_data_path = os.path.join(dirs['raw_data'], raw_data_files[0])
     schema = read_schema(input_data_path)
     var_names = [
