@@ -10,7 +10,6 @@ Purpose:        Use Keras embedding layers for categorical features and create
 import json
 import os
 
-import numpy as np
 import pandas as pd
 
 import tensorflow as tf
@@ -28,32 +27,51 @@ if __name__ == '__main__':
         dirs['intermediate_data'], files['processed_data'],
     )
     schema = read_schema(intermediate_data_path)
-    data = pd.read_parquet(intermediate_data_path)
+    data = pd.read_parquet(intermediate_data_path).iloc[:50000]
     
     # Drop null observations to avoid error in creating TF dataset
-    features_list = [
+    categorical_features_list = [
         'fhv_company',
         'pickup_zone',
         'request_day_of_week',
         'request_hour',
     ]
-    data = data.dropna(subset=features_list).reset_index(drop=True)
+    data = data.dropna(subset=categorical_features_list).reset_index(drop=True)
     
     # Separate features and targets
-    features = data.loc[:, features_list].copy()
+    features = data.loc[:, categorical_features_list].copy()
     targets = data.loc[:, 'driver_pay'].copy()
     assert(len(features) == len(targets))
 
     # Convert data from Pandas to Tensorflow dataset for modeling
-    tf_dataset = tf.data.Dataset.from_tensor_slices((dict(features.dropna()), targets))
+    tf_dataset = tf.data.Dataset.from_tensor_slices(
+        (dict(features.dropna()), targets)
+    )
     print(tf_dataset.__dict__.keys()) # Inspect attributes
 
     # Encode categorical variables via embedding layers
-    categorical_feature_names = [var for var in features_list]
+    input_layers = []
+    embedding_layers = []
+    for feature in categorical_features_list:
+        input_layer = tf.keras.Input(
+            shape=(), name=feature, dtype=tf.string,
+        )
+        input_layer = input_layer[:, tf.newaxis]
+        input_layers.append(input_layer)
+        str_lookup_layer = tf.keras.layers.StringLookup(
+            vocabulary=features[feature].unique(),
+            output_mode='int',
+        )(input_layer)
+        embedding_layer = tf.keras.layers.Embedding(
+            input_dim=features[feature].nunique() + 1,
+            output_dim=4,
+            input_length=1,
+            trainable=True,
+        )(str_lookup_layer)
+        embedding_layers.append(tf.keras.layers.Flatten()(embedding_layer))
+    output_layer = tf.keras.layers.Concatenate()(embedding_layers)
+    model = tf.keras.Model(inputs=input_layers, outputs=output_layer)        
+    tf.keras.utils.plot_model(model)
     
-    puzone_input = tf.keras.Input(shape=(), name='puzone', dtype=tf.string)
-    puzone_strlookup = tf.keras.layers.StringLookup(
-        vocabulary=features['pickup_zone'].unique()
-    )
-    puzone_strlookup(['Battery Park', 'Jamaica Bay', 'Willets Point'])
-    tf.keras.layers.Embedding()
+    # Left off here -> error: Layer model_4 expects 4 inputs, but it received 1 input tensor
+    model(features.loc[:10])
