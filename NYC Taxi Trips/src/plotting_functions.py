@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Aug 17 21:32:25 2023
-
-@author: chris
+Author:         Chris Oswald
+Date Created:   17 August 2023
+Project:        NYC Taxi Trips
+Purpose:        Create common plotting functions to visualize ML model outputs
 """
 # Import packages
 from typing import Iterable
@@ -19,21 +20,24 @@ def plot_train_and_val_loss(
     """Plot ML model training and validation loss by epoch.
     
     Args
-        train_loss:
-        validation_loss:
+        train_loss: List or other Iterable containing training loss by epoch
+        validation_loss: List or other Iterable containing validation loss by epoch
     
     Returns
         None
     """
-    fig, ax = plt.subplots(figsize=(12,9))
+    fig, ax = plt.subplots(figsize=(6,6))
     x_vals = np.arange(1, len(train_loss) + 1)
-    sns.scatterplot(
-        x=x_vals,
-        y=train_loss,
-        ax=ax,
+    ax.plot(
+        x_vals,
+        train_loss,
+        label='Training Loss',
     )
-    sns.scatterplot(
-        x=x_vals,
-        y=val_loss,
-        ax=ax,
+    ax.plot(
+        x_vals,
+        val_loss,
+        label='Validation Loss',
     )
+    ax.legend()
+    ax.set_xlabel('Number of Epochs')
+    ax.set_ylabel('Loss Metric')
