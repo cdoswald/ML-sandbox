@@ -78,7 +78,7 @@ if __name__ == '__main__':
         )(str_lookup_layer)
         embedding_layers.append(tf.keras.layers.Flatten()(embedding_layer))
     concat_embed_layer = tf.keras.layers.Concatenate()(embedding_layers)
-    dense_layer = tf.keras.layers.Dense(1, activation=None)(concat_embed_layer)
+    dense_layer = tf.keras.layers.Dense(1, activation='relu')(concat_embed_layer)
     model = tf.keras.Model(inputs=input_layers, outputs=dense_layer)        
     tf.keras.utils.plot_model(model, show_shapes=True)
     model.summary()
