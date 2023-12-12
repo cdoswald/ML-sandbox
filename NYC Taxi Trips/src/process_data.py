@@ -39,7 +39,7 @@ SECONDS_PER_HOUR = 3600
 if __name__ == '__main__':
 
     # Import config
-    with open('../Config/config.json', 'r') as io:
+    with open('../config/config.json', 'r') as io:
         config = json.load(io)
     dirs, files, params = config['dirs'], config['files'], config['params']
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     data = pd.read_parquet(input_data_path, columns=var_names)
 
     # Filter variables
-    with open('../Config/truncate_vars.json', 'r') as io:
+    with open('../config/truncate_vars.json', 'r') as io:
         truncate_vars = json.load(io)
     print(f'Shape of data prior to truncation: {data.shape}')
     data = truncate_numerical_vars(
