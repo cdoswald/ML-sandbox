@@ -1,3 +1,6 @@
+# Archived files
+_Archive/
+
 # Data files
 Kaggle/Competitions/*/data/
 NYC Taxi Trips/data/*
