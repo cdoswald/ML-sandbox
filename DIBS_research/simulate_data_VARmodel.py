@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec 19 10:12:15 2023
-
-@author: chris
+Date created: 19 Dec 2023
+Author: Chris Oswald
+Project: DIBS Research
+Purpose: Simulate fMRI data using Vector Autoregressive model
 """
 # Import packages
+import os
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 # Define constants
 n_regions = 50
 n_time_periods = 1000
-n_burn_in_periods = 10
+n_burn_in_periods = 100
+export_filename = 'DIBS_simulated_fmri_var4model.csv'
 
 # Define functions
 def calc_max_abs_eigenvalue(mat_A: np.array) -> float:
@@ -27,11 +31,11 @@ if __name__ == '__main__':
     for i in range(n_regions):
         for j in range(n_regions):
             if j == i:
-                region_coef_matrix[i, j] = 0.8
+                region_coef_matrix[i, j] = 0.9
             elif j > i:
                 # Draw from normal distribution (99% of values < 0.99 corr)
                 if abs(j - i) <= 1:
-                    coef_ij = 0.67
+                    coef_ij = 0.7
                 elif abs(j - i) <= 2:
                     coef_ij = 0.54
                 elif abs(j - i) <= 4:
@@ -39,12 +43,11 @@ if __name__ == '__main__':
                 else:
                     coef_ij = np.random.normal(loc=0.2, scale=0.05)
                 # coef_ij = np.random.normal(loc=0, scale=0.15)
-                print(i, j, coef_ij)
                 region_coef_matrix[i, j] = coef_ij
                 region_coef_matrix[j, i] = coef_ij
 
-
-    A1 = region_coef_matrix * 0.07 # Decay factor
+    # Scale coefficient matrices so that time series values don't diverge to inf
+    A1 = region_coef_matrix * 0.07 # Decay factor (arbitrary)
     A2 = A1 * 0.02
     A3 = A2 * 0.01
     A4 = A3 * 0.005
@@ -56,34 +59,43 @@ if __name__ == '__main__':
     sum_max_eigs = A1_max_eig + A2_max_eig + A3_max_eig + A4_max_eig
     print(f'Sum of max absolute eigenvalues: {sum_max_eigs}') # Diverges if sum >= 1.0
     
+    # Initialize vectors with arbitrary scaling
     xt_lag1 = np.ones(shape=(n_regions)) * 20
     xt_lag2 = np.ones(shape=(n_regions)) * 12
     xt_lag3 = np.ones(shape=(n_regions)) * 4
     xt_lag4 = np.ones(shape=(n_regions)) * 1.5
     
+    # Create array to save results
     results = np.zeros((n_regions, n_time_periods))
     
-    cov_mat = np.diag(np.ones(50)) * 4
+    # Specify equation intercept and error term covariance matrix (arbitrary)
     intercept = np.ones(n_regions) * 2
+    cov_mat = np.diag(np.ones(n_regions)) * 4
     
+    # Generate time series data
     for t in range(n_time_periods + n_burn_in_periods):
-        # import pdb; pdb.set_trace()
         epsilon = np.random.multivariate_normal(np.zeros((n_regions)), cov_mat)
         xt = intercept + A1 @ xt_lag1 + A2 @ xt_lag2 + A3 @ xt_lag3 + A4 @ xt_lag4 + epsilon
         if t >= n_burn_in_periods:
             adj_t = t - n_burn_in_periods
             results[:, adj_t] = xt
-            xt_lag4 = xt_lag3
-            xt_lag3 = xt_lag2
-            xt_lag2 = xt_lag1
-            xt_lag1 = xt
-    
+        xt_lag4 = xt_lag3
+        xt_lag3 = xt_lag2
+        xt_lag2 = xt_lag1
+        xt_lag1 = xt
+
+    # Plot results
     fig, ax = plt.subplots()
     for i in range(n_regions):
         ax.plot(results[i, :])
     
+    # Compute correlation between brain regions
     corr_mat = np.corrcoef(results, rowvar=False)
 
+    # Export data
+    os.makedirs('Data', exist_ok=True)
+    file_path = os.path.join('Data', export_filename)
+    pd.DataFrame(results).to_csv(file_path, index=False)
 
 # =============================================================================
 # Archive
