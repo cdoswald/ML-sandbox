@@ -5,6 +5,7 @@ Created on Tue Jan 16 20:02:31 2024
 @author: chris
 """
 # Import packages
+import json
 import os
 from typing import Iterable, List, Optional, Tuple
 
@@ -182,7 +183,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Train model
-    num_epochs = 50
+    num_epochs = 100
     epoch_results = {}
     for epoch in range(num_epochs):
 
@@ -190,8 +191,8 @@ if __name__ == '__main__':
         train_step_loss = []
         model.train()
         for batch_idx, (inputs, targets) in enumerate(train_dl):
-            outputs, hidden = model(inputs.unsqueeze(-1))
-            train_loss = criterion(outputs, targets.unsqueeze(-1))
+            outputs, hidden = model(inputs.unsqueeze(-1).to(device))
+            train_loss = criterion(outputs, targets.unsqueeze(-1).to(device))
             optimizer.zero_grad()
             train_loss.backward()
             optimizer.step()
@@ -202,8 +203,8 @@ if __name__ == '__main__':
         valid_step_loss = []
         with torch.no_grad():
             for batch_idx, (inputs, targets) in enumerate(valid_dl):
-                outputs, _ = model(inputs.unsqueeze(-1))
-                valid_loss = criterion(outputs, targets.unsqueeze(-1))
+                outputs, _ = model(inputs.unsqueeze(-1).to(device))
+                valid_loss = criterion(outputs, targets.unsqueeze(-1).to(device))
                 valid_step_loss.append(valid_loss.item())
         
         # Record average loss on train and validation data for each epoch
@@ -212,6 +213,9 @@ if __name__ == '__main__':
             'valid_loss':np.mean(valid_step_loss),
         }
         print(f'Epoch: {epoch+1}/{num_epochs}, Loss: {np.mean(train_step_loss):.4f}')
+
+    with open('epoch_results.json', 'w') as io:
+        json.dump(epoch_results, io, indent=4)
 
 #     # Generate predicted values for training data
 #     model.eval()
