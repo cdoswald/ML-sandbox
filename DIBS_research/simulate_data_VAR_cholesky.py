@@ -10,13 +10,16 @@ Purpose: Simulate correlated time series data using Vector Autoregressive (VAR)
 #TODO: test non-diagonal F1 matrix
 
 # Import packages
+import os
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 # Define parameters
 np.random.seed(9999)
 n_samples = 1000
 n_regions = 50
+export_filename = 'DIBS_simulated_fmri_VAR1_corr_model.csv'
 
 # =============================================================================
 # Simulate uncorrelated processes
@@ -98,3 +101,8 @@ corr_diff_psd = abs(psd_corr_mat - region_corr_mat)
 print(max(corr_diff_psd.reshape(-1)))
 corr_diff_emp = abs(empirical_corr_mat_X - region_corr_mat)
 print(max(corr_diff_emp.reshape(-1)))
+
+# Export data
+os.makedirs('Data', exist_ok=True)
+file_path = os.path.join('Data', export_filename)
+pd.DataFrame(X).to_csv(file_path, index=False)
