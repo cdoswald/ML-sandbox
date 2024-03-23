@@ -1,10 +1,8 @@
 # Archived files
-_Archive/
+_archive/
 
 # Data files
-Kaggle/Competitions/*/data/
-NYC Taxi Trips/data/*
-
+*/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
