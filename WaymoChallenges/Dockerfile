@@ -1,8 +1,8 @@
 # Base image
 FROM continuumio/miniconda3
 
-# Copy environment file
-COPY environment.yml /workspace/environment.yml
+# Copy files
+COPY . /workspace
 
 # Initialize Conda in shell and activate base
 SHELL ["/bin/bash", "-c"]
