@@ -1,7 +1,8 @@
 {
   "name": "Python 3 Dev",
-  "dockerFile": "Dockerfile",
+  "dockerFile": "../Dockerfile",
   "context": ".",
+  "workspaceFolder": "/workspace",
   "appPort": [8000],
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
