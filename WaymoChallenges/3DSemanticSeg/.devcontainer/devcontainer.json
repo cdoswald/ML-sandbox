@@ -1,0 +1,14 @@
+{
+  "name": "Python 3 Dev",
+  "dockerFile": "Dockerfile",
+  "context": ".",
+  "appPort": [8000],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-azuretools.vscode-docker"
+  ],
+  "remoteUser": "root"
+}
