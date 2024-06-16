@@ -2,7 +2,7 @@
 $image_name = "waymo-od-image"
 $container_name = "waymo-od-container"
 $volume_local_path = "C:/Users/chris/GitHub/ML-sandbox/WaymoChallenges"
-$volume_contain_path = "/workspace"
+$volume_container_path = "/workspace/hostfiles"
 $port = 8000
 
 # Build docker image
@@ -19,4 +19,5 @@ if ($existing_container) {
 }
 
 # Run docker container
-docker run -v ${volume_local_path}:${volume_contain_path} -it --name $container_name -p ${port}:${port} $image_name
+docker run -v ${volume_local_path}:${volume_container_path} -it --name $container_name -p ${port}:${port} $image_name
+#docker run -it --name $container_name -p ${port}:${port} $image_name

@@ -21,8 +21,5 @@ RUN source ~/.bashrc && \
 	git clone https://github.com/waymo-research/waymo-open-dataset.git /workspace/waymo-od && \
 	pip install waymo-open-dataset-tf-2-12-0==1.6.4
 
-# Copy other files
-COPY . /workspace
-
 # Expose port
 EXPOSE 8000
