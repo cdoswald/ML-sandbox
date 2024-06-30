@@ -17,10 +17,10 @@ from waymo_open_dataset.utils import frame_utils
 from utils import utils
 
 # Import data files
-data_dir = "/workspace/hostfiles/3DSemanticSeg/data"
+data_dir = "data"
 data_files = os.listdir(data_dir)
-dataset = utils.load_datafile(data_dir, data_files[0]) #TODO: generalize
 
+dataset = utils.load_datafile(data_dir, data_files[0]) #TODO: generalize
 
 
 

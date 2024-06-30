@@ -1,5 +1,6 @@
 """Utility functions for Waymo Open Dataset challenges."""
 
+import os
 from typing import List, Optional
 
 import tensorflow
@@ -20,12 +21,12 @@ def load_datafile(
         filename: name of .tfrecord file
     
     Returns
-        tensorflow.python.data.ops.readers.TFRecordDatasetV1 object
+        tf.data.Dataset object
     """
     return tf.data.TFRecordDataset(
         os.path.join(datadir, filename),
         compression_type="",
-    )  
+    )
 
 
 def extract_frames_from_datafile(
