@@ -42,15 +42,20 @@ def extract_frames_from_datafile(
     Returns
         list of waymo_open_dataset.dataset_pb2.Frame objects
     """
-    if (max_n_frames <= 0) or (not isinstance(max_n_frames, int)):
-        raise ValueError(f"'max_n_frames' arg is '{max_n_frames}'--must be positive integer")
+    # Validate max_n_frames arg
+    if max_n_frames is not None:
+        if (max_n_frames <= 0) or (not isinstance(max_n_frames, int)):
+            raise ValueError(
+                f"max_n_frames argument ({max_n_frames}) must be positive integer"
+            )
+    # Extract frames
     frames = []
-    for idx, data in enumerate(dataset):
-        if idx >= max_n_frames:
-            break
+    for data in dataset:
         frame = open_dataset.Frame()
         frame.ParseFromString(bytearray(data.numpy()))
         frames.append(frame)
+        if (max_n_frames is not None) and (len(frames) >= max_n_frames):
+            break
     return frames
 
 

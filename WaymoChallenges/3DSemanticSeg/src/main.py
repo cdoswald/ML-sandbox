@@ -17,21 +17,17 @@ from waymo_open_dataset.utils import frame_utils
 from utils import utils
 
 # Import data files
-data_dir = "data"
+data_dir = "/workspace/hostfiles/3DSemanticSeg/data"
 data_files = os.listdir(data_dir)
-
 dataset = utils.load_datafile(data_dir, data_files[0]) #TODO: generalize
 
+# Extract frames
+frames = utils.extract_frames_from_datafile(dataset)
 
-
-for field in frame.DESCRIPTOR.fields:
-    print(field.name)
-
-
-
-
+# Parse range images
 range_images, camera_projections, seg_labels, range_image_top_pose = (
-    frame_utils.parse_range_image_and_camera_projection(frame)
+    frame_utils.parse_range_image_and_camera_projection(frames[0]) # TODO: generalize
 )
- 
+
+
  
