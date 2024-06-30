@@ -14,15 +14,7 @@ def load_datafile(
     datadir: str,
     filename: str,
 ) -> tf.data.Dataset:
-    """Load TFRecord dataset.
-    
-    Args
-        datadir: name of data directory
-        filename: name of .tfrecord file
-    
-    Returns
-        tf.data.Dataset object
-    """
+    """Load TFRecord dataset."""
     return tf.data.TFRecordDataset(
         os.path.join(datadir, filename),
         compression_type="",
@@ -33,15 +25,7 @@ def extract_frames_from_datafile(
     dataset: tf.data.Dataset,
     max_n_frames: Optional[int] = None,
 ) -> List[open_dataset.Frame]:
-    """Extract frames (sequences) from TFRecord dataset.
-    
-    Args
-        dataset: TFRecord object
-        max_n_frames: (default = None) max number of frames to extract
-    
-    Returns
-        list of waymo_open_dataset.dataset_pb2.Frame objects
-    """
+    """Extract frames (sequences) from TFRecord dataset."""
     # Validate max_n_frames arg
     if max_n_frames is not None:
         if (max_n_frames <= 0) or (not isinstance(max_n_frames, int)):
@@ -57,6 +41,18 @@ def extract_frames_from_datafile(
         if (max_n_frames is not None) and (len(frames) >= max_n_frames):
             break
     return frames
+
+
+def convert_range_image_to_tensor(
+    range_image: open_dataset.dataset_pb2.MatrixFloat
+) -> tf.Tensor:
+    """Convert range image from protocol buffer MatrixFloat object
+    to Tensorflow tensor object.
+    
+    Based on https://github.com/waymo-research/waymo-open-dataset/blob/master/tutorial/tutorial.ipynb.
+    """
+    tensor = tf.convert_to_tensor(range_image.data)
+    return tf.reshape(tensor, range_image.shape.dims)
 
 
 # [print(x.name) for x in frame.DESCRIPTOR.fields]
