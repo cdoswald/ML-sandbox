@@ -1,2 +1,9 @@
 # Data files
 *.parquet
+*.tfrecord
+
+# Jupyter notebook intermediate files
+*.ipynb_checkpoints/
+
+# Log files
+*.log
