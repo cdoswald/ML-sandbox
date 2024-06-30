@@ -10,6 +10,8 @@ dependencies:
   - et_xmlfile=1.1.0
   - expat=2.6.2
   - intel-openmp=2023.1.0
+  - ipykernel=6.29.4
+  - ipython=8.18.1
   - libffi=3.4.4
   - mkl=2023.1.0
   - mkl-service=2.4.0
@@ -23,6 +25,7 @@ dependencies:
   - pandas=2.2.1
   - pillow=9.2.0
   - pip=24.0
+  - polars=0.20.31
   - python=3.9
   - python-dateutil=2.9.0post0
   - python-tzdata=2023.3
