@@ -5,6 +5,7 @@ from typing import List, Optional
 
 import tensorflow
 import tensorflow.compat.v1 as tf
+
 tf.enable_eager_execution()
 
 from waymo_open_dataset import dataset_pb2 as open_dataset
@@ -44,11 +45,11 @@ def extract_frames_from_datafile(
 
 
 def convert_range_image_to_tensor(
-    range_image: open_dataset.dataset_pb2.MatrixFloat
+    range_image: open_dataset.dataset_pb2.MatrixFloat,
 ) -> tf.Tensor:
     """Convert range image from protocol buffer MatrixFloat object
     to Tensorflow tensor object.
-    
+
     Based on https://github.com/waymo-research/waymo-open-dataset/blob/master/tutorial/tutorial.ipynb.
     """
     tensor = tf.convert_to_tensor(range_image.data)
