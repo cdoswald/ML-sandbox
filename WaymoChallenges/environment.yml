@@ -3,6 +3,7 @@ channels:
   - defaults
   - conda-forge
 dependencies:
+  - black=24.4.2
   - blas=1.0
   - bottleneck=1.3.7
   - bzip2=1.0.8
