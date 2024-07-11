@@ -13,15 +13,6 @@ tf.enable_eager_execution()
 from waymo_open_dataset import dataset_pb2 as open_dataset
 
 
-# Define constants
-RANGE_IMAGE_DIM_MAP = {
-    0: 'Distance',
-    1: 'Intensity',
-    2: 'Elongation',
-}
-
-
-# Define functions
 def load_datafile(
     datadir: str,
     filename: str,
@@ -69,10 +60,21 @@ def convert_range_image_to_tensor(
 
 def plot_range_image_tensor(
     range_image: tf.Tensor,
+    dim_map: Dict[int, str],
     invert_colormap: bool = False,
     style_params: Optional[Dict] = None,
 ) -> None:
-    """Plot tensor-formatted range image (distance, intensity, and elongation)."""
+    """Plot tensor-formatted range image.
+    
+    Args
+        range_image: range image formatted as tf.Tensor
+        dim_map: dict mapping last dimension index of tensor to corresponding name
+        invert_colormap: invert pixel intensities (light becomes dark and vice versa)
+        style_params: dict mapping style param name to values
+    
+    Returns
+        None
+    """
     # Specify default style params
     config = {
         'figsize': (12, 8),
@@ -80,6 +82,7 @@ def plot_range_image_tensor(
         'fontsize': 20,
         'pad_amt': 10,
         'subtitle_loc': 'left',
+        'cmap': 'gray',
     }
 
     # Update style params
@@ -100,12 +103,12 @@ def plot_range_image_tensor(
 
     # Plot distance, intensity, and elongation
     fig, axes = plt.subplots(
-        nrows=len(RANGE_IMAGE_DIM_MAP),
+        nrows=len(dim_map),
         figsize=config['figsize'],
         gridspec_kw=config['gridspec_kw'],
     )
-    for idx, axes_name in RANGE_IMAGE_DIM_MAP.items():
-        axes[idx].imshow(range_image[..., idx], cmap='gray', aspect='auto')
+    for idx, axes_name in dim_map.items():
+        axes[idx].imshow(range_image[..., idx], cmap=config['cmap'], aspect='auto')
         axes[idx].set_title(
             axes_name,
             fontsize=config['fontsize'],
