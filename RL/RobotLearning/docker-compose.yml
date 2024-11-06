@@ -6,6 +6,6 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - /home/cdo19/cs590/workspace:/workspace
+      - ./workspace:/workspace
         
     
