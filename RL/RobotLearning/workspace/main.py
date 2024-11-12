@@ -290,6 +290,37 @@ if __name__ == "__main__":
         print(env.observation_space)
         print(env.action_space)
 
+        # Create CausalExplorer action queue
+        from collections import deque
+        from itertools import combinations
+        actions_queue = deque()
+
+        max_n_experiments = 100
+        n_action_dims = env.action_space.shape[0]
+        
+        # Create combinations of column indices to unmask
+        col_combos = []
+        n_unmasked_idxs = 1
+        while n_unmasked_idxs <= n_action_dims and len(col_combos) < max_n_experiments:
+            col_combos += [
+                x for x in combinations(range(n_action_dims), n_unmasked_idxs)
+            ]
+            n_unmasked_idxs += 1
+        
+        # Create masking matrix
+        masking_matrix = np.zeros((len(col_combos), n_action_dims), dtype=np.uint8)
+        for row_idx, col_combo in enumerate(col_combos):
+            masking_matrix[row_idx, col_combo] = 1
+
+        # Create unmasked actions matrix
+        # TODO: think about how to set random seed between action samples
+        # TODO: pass masking matrix to agent to use with random base actions 
+        base_actions = env.action_space.sample()
+        base_actions_matrix = np.tile(base_actions, (len(masking_matrix), 1))
+    
+        # Mask actions matrix
+        actions_matrix = base_actions_matrix * masking_matrix # Element-wise product
+
         # Train agent
         train_args = Args()
         train_args.exp_name = "SAC_baseline_train"
